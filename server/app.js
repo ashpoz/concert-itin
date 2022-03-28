@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const axios = require('axios');
+const FormData = require('form-data');
 
 dotenv.config({ path: './config.env' });
 
@@ -15,19 +16,20 @@ app.get('/redirect', function (req, res) {
   const searchParams = new URLSearchParams();
   const token = (searchParams.has('token')) ? searchParams.get('token') : '';
   const form = new URLSearchParams();
-  const formHeaders = new URLSearchParams();
+  // const formHeaders = new URLSearchParams();
 
-  formHeaders.append('content-type', 'application/x-www-form-urlencoded');
   form.append('client_id', process.env.API_KEY);
   form.append('client_secret', process.env.CLIENT_SECRET);
   form.append('code', token);
   form.append('redirect_uri', process.env.REDIRECT_URI);
   form.append('grant_type', 'authorization_code');
 
-  axios.post('https://www.eventbrite.com/oauth/token', form, { headers: formHeaders })
+  console.log(form);
+
+  axios.post('https://www.eventbrite.com/oauth/token', form, { headers: { 'Content-Type' : 'application/x-www-form-urlencoded' } })
   .then(function (response) {
     // TODO: get eventbrite data 
-    // console.log(response);
+    console.log('hi');
   })
   .catch(function (error) {
     // handle error
